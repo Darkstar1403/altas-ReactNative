@@ -26,7 +26,7 @@ export const Busqueda = () => {
             setUser(resp[0]);
             setSelectedValue(user.Centro);
             setNombre(user.Nombre);
-            setImgServerUrl(user.Imagen.toString());
+            setImgServerUrl(user.Imagen);
         }
     }
 
@@ -107,7 +107,7 @@ export const Busqueda = () => {
         data.append('password', password);
         data.append('uni', selectedValue);
         data.append('image', imgServerUrl);
-        const response = await fetch('https://reactnativebranco.000webhostapp.com/auth.php', {
+        const response = await fetch('https://reactnativebranco.000webhostapp.com/modificar.php', {
             method: 'POST',
             body: data
         });
@@ -124,10 +124,10 @@ export const Busqueda = () => {
             <ScrollView>
                 <Input
                         style={styles.alta}
-                        placeholder='Nombre'
+                        placeholder='Código'
                         leftIcon={
                             <Icon
-                            name='user'
+                            name='search'
                             size={24}
                             color='black'
                             />
