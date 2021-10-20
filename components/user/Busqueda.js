@@ -7,7 +7,6 @@ import * as ImagePicker from 'react-native-image-picker';
 export const Busqueda = () => {
 
     const [codigo, setCodigo] = useState('');
-    const [user, setUser] = useState({});
     const [selectedValue, setSelectedValue] = useState('');
     const [imageUrl, setImageUrl] = useState('');
     const [nombre, setNombre] = useState('');
@@ -19,15 +18,28 @@ export const Busqueda = () => {
     }, [imageUrl]);
 
     const buscarUsuario = async() =>{
-        const busqueda = await fetch(`https://reactnativebranco.000webhostapp.com/buscar.php?codigo=${codigo}`);
-        const resp = await busqueda.json();
-       // console.log(resp[0]);
-        if(resp){
-            setUser(resp[0]);
-            setSelectedValue(user.Centro);
-            setNombre(user.Nombre);
-            setImgServerUrl(user.Imagen);
+        try{
+            const busqueda = await fetch(`https://reactnativebranco.000webhostapp.com/buscar.php?codigo=${codigo}`);
+            const resp = await busqueda.json();
+            console.log(resp[0]);
+            return resp[0];
         }
+        catch(error){
+            throw error
+        }
+
+    }
+
+    const handleSearch = () =>{
+        buscarUsuario().then(resp => {
+                setSelectedValue(resp.Centro);
+                setNombre(resp.Nombre);
+                setImgServerUrl(resp.Imagen);
+        }).catch(err => {
+            console.log(err);
+            Alert.alert('Alumno no encontrado');
+            resetForm();
+        });
     }
 
     const renderFileUrl = () =>{
@@ -138,7 +150,7 @@ export const Busqueda = () => {
                     />
                 <View style={{marginTop: 20, width:100, marginLeft:150}}>
                         <Button
-                            onPress={buscarUsuario}
+                            onPress={handleSearch}
                             icon={
                                 <Icon
                                 

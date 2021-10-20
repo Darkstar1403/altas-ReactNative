@@ -9,14 +9,22 @@ export const Bajas = () => {
     const [user, setUser] = useState({});
 
     const buscarUsuario = async() =>{
-        const busqueda = await fetch(`https://reactnativebranco.000webhostapp.com/buscar.php?codigo=${codigo}`);
-        const resp = await busqueda.json();
-       // console.log(resp[0]);
-        if(resp){
-            setUser(resp[0]);
+        try{
+            const busqueda = await fetch(`https://reactnativebranco.000webhostapp.com/buscar.php?codigo=${codigo}`);
+            const resp = await busqueda.json();
+            console.log(resp[0]);
+            return resp[0];
+        }
+        catch(error){
+            throw error
+        }
+    }
+
+    const handleSearch = () =>{
+        buscarUsuario().then(resp => {
             Alert.alert(
                 'Eliminando alumno',
-                `¿Desea eliminar a ${user.Nombre}?`,
+                `¿Desea eliminar a ${resp.Nombre}?`,
                 [
                     {
                         text: "Cancelar",
@@ -26,12 +34,11 @@ export const Bajas = () => {
                       { text: "Si", onPress: () => handleDelete() }
                 ]
             )
-        }
-        else{
-            Alert.alert(
-                'Alumno no encontrado...'
-            )
-        }
+        }).catch(err => {
+            console.log(err);
+            Alert.alert('Alumno no encontrado');
+            resetForm();
+        });
     }
 
     const resetForm = () =>{
@@ -72,7 +79,7 @@ export const Bajas = () => {
                     />
                 <View style={{marginTop: 20, width:100, marginLeft:150}}>
                         <Button
-                            onPress={buscarUsuario}
+                            onPress={handleSearch}
                             icon={
                                 <Icon
                                 
